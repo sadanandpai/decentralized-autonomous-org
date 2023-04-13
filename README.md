@@ -1,2 +1,3 @@
-# web3-batch5-team3
-Web 3 project initiative
+# Self Governance DAO tooling
+
+Visit https://dao-web3.netlify.app/
