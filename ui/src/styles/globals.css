@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: white;
+  --primary: black;
+  --secondary: blue;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: black;
+    --primary: white;
+    --secondary: blue;
+  }
+}
+
