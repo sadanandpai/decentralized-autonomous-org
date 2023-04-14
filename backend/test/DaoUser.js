@@ -6,7 +6,7 @@ const { expect } = require("chai");
 
 describe("User", function () {
   async function deployUserFixture() {
-    const User = await ethers.getContractFactory("User");
+    const User = await ethers.getContractFactory("DaoUser");
     return await User.deploy();
   }
 

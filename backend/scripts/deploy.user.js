@@ -7,11 +7,11 @@
 const hre = require("hardhat");
 
 async function main() {
-  const User = await hre.ethers.getContractFactory("User");
+  const User = await hre.ethers.getContractFactory("DaoUser");
   const user = await User.deploy();
   await user.deployed();
 
-  console.log(`User is deployed to ${user.address}`);
+  console.log(`DaoUser is deployed to ${user.address}`);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

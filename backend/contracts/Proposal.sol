@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-import "./User.sol";
+import "./DaoUser.sol";
 
 contract Proposal {
     uint public proposalId = 0;
