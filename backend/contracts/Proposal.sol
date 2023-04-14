@@ -1,14 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-contract User {
+import "./User.sol";
 
-}
-
-contract DAO {
+contract Proposal {
     uint public proposalId = 0;
     bool public currentActiveProposal = false;
     bool public locked;
+
     enum VotingStatus {
         Pending,
         Accept,
@@ -22,19 +21,22 @@ contract DAO {
         Expired
     }
 
-   struct Proposal {
+    struct ProposalStruct {
         uint _id;
-       proposalStatus _ps;
-       string _title;
-       string _description;
-   }
+        proposalStatus _ps;
+        string _title;
+        string _description;
+    }
 
     // mapping(Proposal => mapping(User => VotingStatus)) public proposals;
 
-    Proposal public proposal;
+    ProposalStruct public proposal;
 
     modifier canCreateProposal() {
-        require(!currentActiveProposal && !locked, "Already another Proposal is in progress");
+        require(
+            !currentActiveProposal && !locked,
+            "Already another Proposal is in progress"
+        );
 
         locked = true;
         _;
@@ -42,17 +44,15 @@ contract DAO {
         currentActiveProposal = true;
     }
 
-    function createProposal(string calldata _title, string calldata _description ) external canCreateProposal returns (string memory, string memory) {
-        require();
+    function createProposal(
+        string calldata _title,
+        string calldata _description
+    ) external canCreateProposal returns (string memory, string memory) {
+        // require();
         proposal._title = _title;
         proposal._description = _description;
-        proposal._ps  = proposalStatus.Active;
+        proposal._ps = proposalStatus.Active;
         proposal._id = ++proposalId;
         return (_title, _description);
     }
-
-
-
-
 }
-
