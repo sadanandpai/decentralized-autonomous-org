@@ -1,5 +1,4 @@
 import Head from 'next/head';
-import Profile from '@/components/Profile';
 import Users from '@/components/Users';
 
 export default function ProfilePage() {

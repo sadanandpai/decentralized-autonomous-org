@@ -1,8 +1,7 @@
 import { ethers } from 'ethers';
-import { provider } from '@/actions/Metamask';
+import { useMetaMaskStore } from '@/actions/metaMask.store';
 
-const signer = provider?.getSigner();
-const contractAddress = '0x92d1576A86c9e88b29127F80E216f46f781f6156';
+const contractAddress = '0x85dF45D00ad94cad0d1724083B9200a01fE88381';
 const abi = [
   {
     anonymous: false,
@@ -165,4 +164,7 @@ const abi = [
   },
 ];
 
-export const DAO_USER_CONTRACT = new ethers.Contract(contractAddress, abi, signer);
+export const getDaoUserContract = () => {
+  const signer = useMetaMaskStore.getState().provider?.getSigner();
+  return new ethers.Contract(contractAddress, abi, signer);
+};

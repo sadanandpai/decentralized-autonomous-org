@@ -1,4 +1,4 @@
-import { PROPOSAL_CONTRACT } from '@/contracts/Proposal';
+import { getProposalContract } from '@/contracts/proposal.contract';
 
 export const fetchProposals = async () => {
   return [
@@ -17,9 +17,9 @@ export const fetchProposals = async () => {
     },
   ];
 
-  try {
-    await PROPOSAL_CONTRACT.getProposals();
-  } catch {
-    console.log('Something went wrong');
-  }
+  // try {
+  //   await getProposalContract.getProposals();
+  // } catch {
+  //   console.log('Something went wrong');
+  // }
 };

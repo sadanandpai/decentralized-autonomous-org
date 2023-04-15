@@ -1,9 +1,9 @@
 import { Button, Card, CardBody, CardFooter, CardHeader, Text } from '@chakra-ui/react';
-import { account, connectToMetaMask, getBalance } from '@/actions/Metamask';
 import { useEffect, useState } from 'react';
 
-import { ethers } from 'ethers';
-import { fetchProposals } from '@/actions/Proposal';
+import { fetchProposals } from '@/actions/proposal.action';
+import { useMetaMaskStore } from '@/actions/metaMask.store';
+import { useRouter } from 'next/router';
 
 function Proposal({ proposal }: any) {
   return (
@@ -32,15 +32,22 @@ function Proposal({ proposal }: any) {
 }
 
 function Proposals() {
+  const router = useRouter();
+  const provider = useMetaMaskStore((state) => state.provider);
   const [proposals, setProprosals] = useState<any>([]);
+
+  useEffect(() => {
+    if (provider) {
+      getProposals();
+    } else {
+      router.push('/');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const getProposals = async () => {
     setProprosals(await fetchProposals());
   };
-
-  useEffect(() => {
-    getProposals();
-  }, []);
 
   return (
     <div className="m-auto my-8 px-6 md:max-w-4xl">
