@@ -46,4 +46,13 @@ contract DaoUser {
   function getAllUsers() public view returns (User[] memory) {
     return userList;
   }
+
+  function isUserAddressPresent(address userAddress) external view returns (bool) {
+      if (bytes(userDetails[userAddress].firstName).length == 0){
+          return false;
+      }
+      else{
+          return true;
+      }
+  }
 }
