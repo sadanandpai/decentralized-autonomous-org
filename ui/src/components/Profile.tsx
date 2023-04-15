@@ -24,7 +24,7 @@ function Profile() {
   }, []);
 
   const setUserDetails = () => {
-    getUserDetails(account).then((userDetails) => {
+    getUserDetails(account!).then((userDetails) => {
       if (!userDetails) {
         setIsNewUser(true);
         return;
@@ -60,7 +60,7 @@ function Profile() {
     <div className="m-auto my-12 px-6 md:max-w-xl">
       <FormControl className="mb-8">
         <FormLabel>Address</FormLabel>
-        <Input type="text" defaultValue={account} readOnly />
+        <Input type="text" defaultValue={account!} readOnly />
         <FormHelperText>
           Balance: <span className="text-blue-800">{balance}</span>
         </FormHelperText>
