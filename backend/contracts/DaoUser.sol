@@ -1,42 +1,23 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.10;
+pragma solidity ^0.8.0;
 
 contract DaoUser {
     struct User {
-        address userAddress;
-        string firstName;
-        string lastName;
-        bool isActive;
+        string name;
+        string email;
+
     }
 
-    uint public usersCount = 0;
-    mapping(address => User) public Users;
+    mapping(address => User) public userDetails;
 
-    function createUser(
-        string calldata firstName,
-        string calldata lastName
-    ) public {
-        User memory user = User(msg.sender, firstName, lastName, true);
-        Users[msg.sender] = user;
-
-        usersCount++;
+    function addUserDetails(string memory _name, string memory _email) public {
+        userDetails[msg.sender] = User(_name, _email);
     }
 
-    modifier isAuthorized() {
-        require(
-            Users[msg.sender].userAddress !=
-                0x0000000000000000000000000000000000000000,
-            "User is not a part of the DAO"
-        );
-        _;
+    function updateUserDetails(string memory _name, string memory _email) public {
+        User storage user = userDetails[msg.sender];
+        user.name = _name;
+        user.email = _email;
     }
 
-    function updateUser(
-        string calldata firstName,
-        string calldata lastName
-    ) public view isAuthorized {
-        User memory user = Users[msg.sender];
-        user.firstName = firstName;
-        user.lastName = lastName;
-    }
 }
