@@ -1,5 +1,6 @@
 import { Button } from '@chakra-ui/react';
 import Head from 'next/head';
+import Link from 'next/link';
 import { connectToMetaMask } from '@/actions/Metamask';
 import { useRouter } from 'next/router';
 import { useToast } from '@chakra-ui/react';
@@ -30,11 +31,17 @@ export default function HomePage() {
       <Head>
         <title>DAO: Home</title>
       </Head>
-      <div className="flex min-h-screen flex-col text-center">
-        <main>
-          <Button variant="solid" colorScheme="green" onClick={onMetaMarkConnect} className="my-8">
+      <div>
+        <main className="text-center">
+          <Button variant="solid" colorScheme="green" onClick={onMetaMarkConnect} className="m-8">
             Get Started
           </Button>
+
+          <Link href="/proposals">
+            <Button variant="solid" colorScheme="blue" className="m-8">
+              Proposals
+            </Button>
+          </Link>
         </main>
       </div>
     </>

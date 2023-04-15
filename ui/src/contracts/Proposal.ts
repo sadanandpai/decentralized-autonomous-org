@@ -66,4 +66,4 @@ const abi = [
   },
 ];
 
-export const DAO_USER_CONTRACT = new ethers.Contract(contractAddress, abi, signer);
+export const PROPOSAL_CONTRACT = new ethers.Contract(contractAddress, abi, signer);
