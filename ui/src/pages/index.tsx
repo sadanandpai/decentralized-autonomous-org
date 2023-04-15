@@ -42,6 +42,12 @@ export default function HomePage() {
               Proposals
             </Button>
           </Link>
+
+          <Link href="/users">
+            <Button variant="solid" colorScheme="blue" className="m-8">
+              Users
+            </Button>
+          </Link>
         </main>
       </div>
     </>

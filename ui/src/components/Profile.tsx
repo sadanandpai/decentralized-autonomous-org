@@ -1,25 +1,59 @@
 import { Button, FormControl, FormHelperText, FormLabel, Input } from '@chakra-ui/react';
 import { account, connectToMetaMask, getBalance } from '@/actions/Metamask';
+import { enrollUser, getUserDetails, updateUser } from '@/actions/DaoUser';
+import { enrollmentToast, getFailedToast, updateToast } from '@/constants/toast';
 import { useEffect, useState } from 'react';
 
-import { enrollUser } from '@/actions/DaoUser';
-import { ethers } from 'ethers';
+import { Spinner } from '@chakra-ui/react';
+import { useToast } from '@chakra-ui/react';
 
 function Profile() {
+  const toast = useToast();
   const [balance, setBalance] = useState<any>();
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
+  const [isNewUser, setIsNewUser] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     connectToMetaMask().then(() => {
       getBalance().then((value) => setBalance(value));
+      setUserDetails();
     });
   }, []);
 
-  const onSubmit = (e: any) => {
+  const setUserDetails = () => {
+    getUserDetails(account).then((userDetails) => {
+      if (!userDetails) {
+        setIsNewUser(true);
+        return;
+      }
+
+      setFirstName(userDetails?.firstname);
+      setLastName(userDetails?.lastname);
+      setEmail(userDetails?.email);
+      setIsNewUser(false);
+    });
+  };
+
+  const onSubmit = async (e: any) => {
     e.preventDefault();
-    enrollUser(firstName, lastName, email);
+    setIsLoading(true);
+    try {
+      if (isNewUser) {
+        await enrollUser(firstName, lastName, email);
+        toast(enrollmentToast);
+      } else {
+        await updateUser(firstName, lastName, email);
+        toast(updateToast);
+      }
+    } catch (e: any) {
+      toast(getFailedToast(e.reason));
+    } finally {
+      setIsLoading(false);
+      setUserDetails();
+    }
   };
 
   return (
@@ -49,7 +83,7 @@ function Profile() {
         </FormControl>
 
         <Button mt={4} colorScheme="teal" type="submit">
-          Enroll
+          {isLoading ? <Spinner /> : isNewUser ? 'Enroll' : 'Update'}
         </Button>
       </form>
     </div>
