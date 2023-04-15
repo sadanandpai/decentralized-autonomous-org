@@ -1,8 +1,8 @@
-import { ethers } from "ethers";
+import { ethers } from 'ethers';
+import { provider } from '@/actions/Metamask';
 
-const provider = new ethers.providers.Web3Provider((window as any).ethereum);
-const signer = provider.getSigner();
-const contractAddress = "0xe25937256311A1fBB69EDCA6273ABB317fB00dcA";
+const signer = provider?.getSigner();
+const contractAddress = '0xe25937256311A1fBB69EDCA6273ABB317fB00dcA';
 const abi = [
 	{
 		"anonymous": false,
@@ -91,8 +91,4 @@ const abi = [
 	}
 ];
 
-export const DAO_USER_CONTRACT = new ethers.Contract(
-  contractAddress,
-  abi,
-  signer
-);
+export const DAO_USER_CONTRACT = new ethers.Contract(contractAddress, abi, signer);

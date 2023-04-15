@@ -3,9 +3,8 @@ pragma solidity ^0.8.0;
 
 contract DaoUser {
     struct User {
-        string name;
-        string email;
-
+    string name;
+    string email;
     }
 
     event NewUserAdded(address indexed userAddress, string name, string email);
@@ -28,6 +27,5 @@ contract DaoUser {
         user.name = _name;
         user.email = _email;
     }
-
 
 }
