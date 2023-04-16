@@ -25,7 +25,7 @@ function User({ user }: any) {
           </Text>
         </div>
         <Image
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSc_r_nNv3j7kodjLAcK1ffhptO1KYKtZAv1A&usqp=CAU"
+          src={user.pic}
           alt="display pic"
           className="border border-black border-solid rounded-full"
           width={60}
@@ -53,7 +53,10 @@ function Users() {
 
   const getUsers = async () => {
     try {
-      setUsers(await getAllUsers());
+      const users = await getAllUsers();
+      console.log(users);
+
+      setUsers(users);
     } catch (e: any) {
       toast(getFailedToast(e.reason ?? e.code));
     }

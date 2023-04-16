@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import GaugeChart from 'react-gauge-chart';
 import { getFailedToast } from '@/constants/toast.data';
 import { useMetaMaskStore } from '@/actions/metaMask.store';
+import { useProposalsStore } from '@/actions/proposals.store';
 
 enum VotingStatus {
   Pending,
@@ -17,6 +18,7 @@ function Proposal({ proposal }: any) {
   const [myVote, setMyVote] = useState<VotingStatus | null>(null);
   const [isVoted, setIsVoted] = useState(false);
   const account = useMetaMaskStore((state) => state.account);
+  const getProposals = useProposalsStore((state) => state.getProposals);
 
   const totalVotes = parseInt(proposal.totalNoOfVotes);
   const percentageOfAcceptance = totalVotes
@@ -43,6 +45,7 @@ function Proposal({ proposal }: any) {
         setIsVoted(false);
       }
       await getVoteDetails();
+      getProposals();
     }
   };
 
@@ -51,65 +54,77 @@ function Proposal({ proposal }: any) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const cardHeader = (
+    <CardHeader className="flex flex-col gap-4">
+      <Text>
+        <strong>Proposal Id:</strong> {parseInt(proposal.id)}
+      </Text>
+      <Text>
+        <strong>Owner:</strong> {proposal.owner}
+      </Text>
+    </CardHeader>
+  );
+
+  const cardBody = (
+    <CardBody>
+      <Text className="mb-4">
+        <strong>Title:</strong> {proposal.title}
+      </Text>
+      <Text>
+        <strong>Description:</strong>
+        {proposal.description}
+      </Text>
+    </CardBody>
+  );
+
+  const cardFooter = (
+    <CardFooter className="flex items-center flex-col gap-4 md:flex-row md:justify-between">
+      <a href={proposal.uploadDocPath} target="blank" className="text-blue-700 underline">
+        Document link
+      </a>
+
+      <div className="text-center">
+        <Text className="mb-4 font-bold">
+          {myVote === VotingStatus.Pending ? 'Cast your vote' : 'You voted for'}
+        </Text>
+        <div className="flex gap-4">
+          <Button
+            variant="solid"
+            colorScheme="orange"
+            isDisabled={myVote === VotingStatus.Accept}
+            onClick={() => onVote(false)}
+          >
+            Reject
+          </Button>
+          <Button
+            variant="solid"
+            colorScheme="green"
+            isDisabled={myVote === VotingStatus.Reject}
+            onClick={() => onVote(true)}
+          >
+            Accept
+          </Button>
+        </div>
+      </div>
+
+      <div>
+        <GaugeChart
+          nrOfLevels={10}
+          colors={['red', 'green']}
+          arcWidth={0.3}
+          percent={percentageOfAcceptance}
+          textColor="black"
+          needleColor="grey"
+        />
+      </div>
+    </CardFooter>
+  );
+
   return (
     <Card className="mb-8" variant="filled">
-      <CardHeader className="flex flex-col gap-4">
-        <Text>
-          <strong>Proposal Id:</strong> {parseInt(proposal.id)}
-        </Text>
-        <Text>
-          <strong>Owner:</strong> {proposal.owner}
-        </Text>
-      </CardHeader>
-      <CardBody>
-        <Text className="mb-4">
-          <strong>Title:</strong> {proposal.title}
-        </Text>
-        <Text>
-          <strong>Description:</strong>
-          {proposal.description}
-        </Text>
-      </CardBody>
-      <CardFooter className="flex items-center flex-col gap-4 md:flex-row md:justify-between">
-        <a href={proposal.uploadDocPath} target="blank" className="text-blue-700 underline">
-          Document link
-        </a>
-
-        <div className="text-center">
-          <Text className="mb-4 font-bold">
-            {myVote === VotingStatus.Pending ? 'Cast your vote' : 'You voted for'}
-          </Text>
-          <div className="flex gap-4">
-            <Button
-              variant="solid"
-              colorScheme="orange"
-              isDisabled={myVote === VotingStatus.Accept}
-              onClick={() => onVote(false)}
-            >
-              Reject
-            </Button>
-            <Button
-              variant="solid"
-              colorScheme="green"
-              isDisabled={myVote === VotingStatus.Reject}
-              onClick={() => onVote(true)}
-            >
-              Accept
-            </Button>
-          </div>
-        </div>
-
-        <div>
-          <GaugeChart
-            nrOfLevels={10}
-            colors={['red', 'green']}
-            arcWidth={0.3}
-            percent={percentageOfAcceptance}
-            textColor="black"
-            needleColor="grey"
-          />
-        </div>
-      </CardFooter>
+      {cardHeader}
+      {cardBody}
+      {cardFooter}
     </Card>
   );
 }

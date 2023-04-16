@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import { useMetaMaskStore } from '@/actions/metaMask.store';
 
-const contractAddress = '0x87d77edb43E537aBF6747C20828BC443CC033a03';
+const contractAddress = '0xFCe3C3AC02d31776753D1868167fE343fB174a1B';
 const abi = [
   {
     anonymous: false,
@@ -30,6 +30,12 @@ const abi = [
         name: 'email',
         type: 'string',
       },
+      {
+        indexed: false,
+        internalType: 'string',
+        name: 'pic',
+        type: 'string',
+      },
     ],
     name: 'NewUserAdded',
     type: 'event',
@@ -49,6 +55,11 @@ const abi = [
       {
         internalType: 'string',
         name: 'email',
+        type: 'string',
+      },
+      {
+        internalType: 'string',
+        name: 'pic',
         type: 'string',
       },
     ],
@@ -83,10 +94,34 @@ const abi = [
             name: 'email',
             type: 'string',
           },
+          {
+            internalType: 'string',
+            name: 'pic',
+            type: 'string',
+          },
         ],
         internalType: 'struct DaoUser.User[]',
         name: '',
         type: 'tuple[]',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'userAddress',
+        type: 'address',
+      },
+    ],
+    name: 'isUserAddressPresent',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
       },
     ],
     stateMutability: 'view',
@@ -107,6 +142,11 @@ const abi = [
       {
         internalType: 'string',
         name: 'email',
+        type: 'string',
+      },
+      {
+        internalType: 'string',
+        name: 'pic',
         type: 'string',
       },
     ],
@@ -156,6 +196,11 @@ const abi = [
       {
         internalType: 'string',
         name: 'email',
+        type: 'string',
+      },
+      {
+        internalType: 'string',
+        name: 'pic',
         type: 'string',
       },
     ],

@@ -22,6 +22,7 @@ function ProfileForm() {
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
+  const [pic, setPic] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -47,9 +48,10 @@ function ProfileForm() {
           return;
         }
 
-        setFirstName(userDetails?.firstname);
-        setLastName(userDetails?.lastname);
-        setEmail(userDetails?.email);
+        setFirstName(userDetails.firstname);
+        setLastName(userDetails.lastname);
+        setEmail(userDetails.email);
+        setPic(userDetails.pic);
         setIsNewUser(false);
       },
       (e: any) => {
@@ -63,12 +65,16 @@ function ProfileForm() {
     setIsLoading(true);
     try {
       if (isNewUser) {
-        const txn = await enrollUser(firstName, lastName, email);
+        const txn = await enrollUser(firstName, lastName, email, pic);
+        setIsLoading(false);
+
         await txn.wait();
         toast(enrollmentToast);
         setIsNewUser(false);
       } else {
-        const txn = await updateUser(firstName, lastName, email);
+        const txn = await updateUser(firstName, lastName, email, pic);
+        setIsLoading(false);
+
         await txn.wait();
         toast(updateToast);
       }
@@ -104,6 +110,11 @@ function ProfileForm() {
         <FormControl isRequired>
           <FormLabel>Email address</FormLabel>
           <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        </FormControl>
+
+        <FormControl isRequired>
+          <FormLabel>Profile Picture</FormLabel>
+          <Input type="text" value={pic} onChange={(e) => setPic(e.target.value)} />
         </FormControl>
 
         <Button mt={4} colorScheme="teal" type="submit" isLoading={isLoading}>
