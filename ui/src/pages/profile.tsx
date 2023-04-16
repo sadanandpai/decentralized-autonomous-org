@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import Profile from '@/components/Profile';
+import ProfileForm from '@/components/ProfileForm';
 
 export default function ProfilePage() {
   return (
@@ -8,7 +8,7 @@ export default function ProfilePage() {
         <title>DAO: Profile</title>
       </Head>
       <main>
-        <Profile />
+        <ProfileForm />
       </main>
     </>
   );

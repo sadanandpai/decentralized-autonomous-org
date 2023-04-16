@@ -8,7 +8,7 @@ import { Spinner } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useToast } from '@chakra-ui/react';
 
-function Profile() {
+function ProfileForm() {
   const toast = useToast();
   const router = useRouter();
   const provider = useMetaMaskStore((state) => state.provider);
@@ -108,4 +108,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default ProfileForm;

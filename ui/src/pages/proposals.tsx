@@ -8,7 +8,7 @@ export default function ProposalsPage() {
         <title>DAO: Proposals Dashboard</title>
       </Head>
       <div>
-        <h2 className="text-2xl font-medium mt-8 text-center">List of Proposals</h2>
+        <h2 className="text-2xl font-medium mt-8 text-center">Proposals</h2>
         <main>
           <Proposals />
         </main>
