@@ -15,15 +15,18 @@ interface MetaMaskStateIntf {
   provider: ethers.providers.Web3Provider | null;
   network: ethers.providers.Network | null;
   account: string | null;
+  isNewUser: boolean;
 
   connectToMetaMask: () => void;
   resetMetaMask: () => void;
+  setIsNewUser: (isNewUser: boolean) => void;
 }
 
 export const useMetaMaskStore = create<MetaMaskStateIntf>((set, get) => ({
   provider: null,
   network: null,
   account: null,
+  isNewUser: true,
 
   connectToMetaMask: async () => {
     if (get().provider) {
@@ -58,6 +61,12 @@ export const useMetaMaskStore = create<MetaMaskStateIntf>((set, get) => ({
 
     (window as any).ethereum.removeListener('chainChanged', handleChainChanged);
     (window as any).ethereum.removeListener('accountsChanged', handleAccountChanged);
+  },
+
+  setIsNewUser: (isNewUser: boolean) => {
+    set({
+      isNewUser,
+    });
   },
 }));
 

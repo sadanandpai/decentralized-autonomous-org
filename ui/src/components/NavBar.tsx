@@ -2,10 +2,14 @@ import { Button } from '@chakra-ui/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import MetaMaskButton from './MetaMaskButton';
+import { shallow } from 'zustand/shallow';
 import { useMetaMaskStore } from '@/actions/metaMask.store';
 
 function NavBar() {
-  const provider = useMetaMaskStore((state) => state.provider);
+  const [provider, isNewUser] = useMetaMaskStore(
+    (state) => [state.provider, state.isNewUser],
+    shallow
+  );
 
   return (
     <header className="flex justify-between items-center p-4 shadow-md">
@@ -17,12 +21,16 @@ function NavBar() {
             height="30"
             width="30"
           />
-          Self Governance DAO
+
+          <span>
+            <span className="hidden sm:inline">Self Governance </span>
+            <span className="">DAO</span>
+          </span>
         </h1>
       </Link>
 
       <div className="flex gap-2">
-        {provider && (
+        {provider && !isNewUser && (
           <>
             <Link href="/proposals">
               <Button variant="outline" colorScheme="blue">

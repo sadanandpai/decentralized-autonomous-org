@@ -15,7 +15,7 @@ export const connectToast: UseToastOptions = {
   status: 'success',
   duration: 3000,
   isClosable: true,
-  position: 'top-right',
+  position: 'bottom-right',
 };
 
 export const networkChangeToast: UseToastOptions = {
@@ -24,7 +24,7 @@ export const networkChangeToast: UseToastOptions = {
   status: 'warning',
   duration: 3000,
   isClosable: true,
-  position: 'top-right',
+  position: 'bottom-right',
 };
 
 export const accountChangeToast: UseToastOptions = {
@@ -33,7 +33,7 @@ export const accountChangeToast: UseToastOptions = {
   status: 'warning',
   duration: 3000,
   isClosable: true,
-  position: 'top-right',
+  position: 'bottom-right',
 };
 
 export const connectFailedToast: UseToastOptions = {
@@ -42,7 +42,7 @@ export const connectFailedToast: UseToastOptions = {
   status: 'error',
   duration: 3000,
   isClosable: true,
-  position: 'top-right',
+  position: 'bottom-right',
 };
 
 export const getFailedToast = (description: string): UseToastOptions => ({

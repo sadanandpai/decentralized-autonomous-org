@@ -1,23 +1,56 @@
-import { Avatar, AvatarBadge } from '@chakra-ui/react';
+import { Avatar, AvatarBadge, useToast } from '@chakra-ui/react';
 
+import { getFailedToast } from '@/constants/toast.data';
+import { getUserDetails } from '@/actions/user.action';
+import { shallow } from 'zustand/shallow';
 import { useEffect } from 'react';
 import { useMetaMaskStore } from '@/actions/metaMask.store';
 import { useRouter } from 'next/router';
 
 function MetaMaskButton() {
   const router = useRouter();
-  const [connectToMetaMask, provider] = useMetaMaskStore((state) => [
-    state.connectToMetaMask,
-    state.provider,
-  ]);
+  const toast = useToast();
+  const [connectToMetaMask, account, provider, isNewUser, setIsNewUser] = useMetaMaskStore(
+    (state) => [
+      state.connectToMetaMask,
+      state.account,
+      state.provider,
+      state.isNewUser,
+      state.setIsNewUser,
+    ],
+    shallow
+  );
 
   useEffect(() => {
-    router.push('/profile');
+    if (account) {
+      getUserDetails(account).then(
+        (userDetails) => {
+          if (!userDetails) {
+            router.push('/profile');
+            setIsNewUser(true);
+            return;
+          }
+
+          setIsNewUser(false);
+        },
+        (e: any) => {
+          toast(getFailedToast(e.reason ?? e.code));
+        }
+      );
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [provider]);
 
+  const onClick = () => {
+    if (!provider) {
+      connectToMetaMask();
+    } else {
+      router.push('/profile');
+    }
+  };
+
   return (
-    <button onClick={connectToMetaMask}>
+    <button onClick={onClick}>
       <Avatar
         src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/MetaMask_Fox.svg/1200px-MetaMask_Fox.svg.png"
         height="10"

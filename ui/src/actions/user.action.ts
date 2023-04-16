@@ -1,8 +1,7 @@
 import { getDaoUserContract } from '@/contracts/user.contract';
 
 export const enrollUser = async (firstName: string, lastName: string, email: string) => {
-  const txn = await getDaoUserContract().addUserDetails(firstName, lastName, email);
-  return await txn.wait();
+  return await getDaoUserContract().addUserDetails(firstName, lastName, email);
 };
 
 export const updateUser = async (firstName: string, lastName: string, email: string) => {

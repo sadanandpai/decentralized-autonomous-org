@@ -10,29 +10,10 @@ import { useToast } from '@chakra-ui/react';
 
 function ProposalForm({ setIsNewProposal }: any) {
   const toast = useToast();
-  const router = useRouter();
-  const provider = useMetaMaskStore((state) => state.provider);
-
-  const [balance, setBalance] = useState<any>();
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [document, setDocument] = useState<string>('');
-
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (provider) {
-      try {
-        getBalance().then((value) => setBalance(value));
-      } catch (e: any) {
-        toast(getFailedToast(e.reason));
-      }
-    } else {
-      router.push('/');
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const onSubmit = async (e: any) => {
     e.preventDefault();

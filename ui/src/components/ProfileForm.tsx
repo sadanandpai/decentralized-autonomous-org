@@ -4,7 +4,7 @@ import { enrollmentToast, getFailedToast, updateToast } from '@/constants/toast.
 import { getBalance, useMetaMaskStore } from '@/actions/metaMask.store';
 import { useEffect, useState } from 'react';
 
-import { Spinner } from '@chakra-ui/react';
+import { shallow } from 'zustand/shallow';
 import { useRouter } from 'next/router';
 import { useToast } from '@chakra-ui/react';
 
@@ -13,12 +13,15 @@ function ProfileForm() {
   const router = useRouter();
   const provider = useMetaMaskStore((state) => state.provider);
   const account = useMetaMaskStore((state) => state.account)!;
+  const [isNewUser, setIsNewUser] = useMetaMaskStore(
+    (state) => [state.isNewUser, state.setIsNewUser],
+    shallow
+  );
 
   const [balance, setBalance] = useState<any>();
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
-  const [isNewUser, setIsNewUser] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -60,10 +63,13 @@ function ProfileForm() {
     setIsLoading(true);
     try {
       if (isNewUser) {
-        await enrollUser(firstName, lastName, email);
+        const txn = await enrollUser(firstName, lastName, email);
+        await txn.wait();
         toast(enrollmentToast);
+        setIsNewUser(false);
       } else {
-        await updateUser(firstName, lastName, email);
+        const txn = await updateUser(firstName, lastName, email);
+        await txn.wait();
         toast(updateToast);
       }
     } catch (e: any) {
@@ -100,8 +106,8 @@ function ProfileForm() {
           <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
         </FormControl>
 
-        <Button mt={4} colorScheme="teal" type="submit">
-          {isLoading ? <Spinner /> : isNewUser ? 'Enroll' : 'Update'}
+        <Button mt={4} colorScheme="teal" type="submit" isLoading={isLoading}>
+          {isNewUser ? 'Enroll' : 'Update'}
         </Button>
       </form>
     </div>

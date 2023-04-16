@@ -10,7 +10,9 @@ const { ToastContainer } = createStandaloneToast();
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider
-      toastOptions={{ defaultOptions: { position: 'top-right', duration: 3000, isClosable: true } }}
+      toastOptions={{
+        defaultOptions: { position: 'bottom-right', duration: 3000, isClosable: true },
+      }}
     >
       <NavBar />
       <Component {...pageProps} />
