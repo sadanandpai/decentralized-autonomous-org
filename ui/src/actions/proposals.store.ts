@@ -17,12 +17,13 @@ export const useProposalsStore = create<ProposalsStateIntf>((set) => ({
 
   getProposals: async () => {
     try {
-      const proposals = await fetchProposals();
+      const proposals: any = Array.from(await fetchProposals());
+
       set({
         proposals: proposals.reverse(),
-        activeProposal: proposals.at(-1),
+        activeProposal: proposals[0].status === 0 ? null : proposals[0],
       });
-    } catch {
+    } catch (e) {
       toast(connectFailedToast);
     }
   },

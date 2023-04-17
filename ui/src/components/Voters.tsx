@@ -2,11 +2,14 @@ import { useEffect, useState } from 'react';
 
 import { getFailedToast } from '@/constants/toast.data';
 import { getVotersList } from '@/actions/proposal.action';
+import { useRouter } from 'next/router';
 import { useToast } from '@chakra-ui/react';
 
 function Voters() {
   const toast = useToast();
   const [voters, setVoters] = useState<any>([]);
+  const router = useRouter();
+  const { id } = router.query;
 
   useEffect(() => {
     getVoters();
@@ -14,11 +17,13 @@ function Voters() {
   }, []);
 
   const getVoters = async () => {
-    try {
-      const voters = await getVotersList(0);
-      setVoters(voters);
-    } catch (e: any) {
-      toast(getFailedToast(e.reason ?? e.code));
+    if (typeof id === 'string') {
+      try {
+        const voters = await getVotersList(+id);
+        setVoters(voters);
+      } catch (e: any) {
+        toast(getFailedToast(e.reason ?? e.code));
+      }
     }
   };
 

@@ -96,29 +96,31 @@ function Proposal({ proposal }: any) {
           Document link
         </a>
 
-        <div className="text-center">
-          <Text className="mb-4 font-bold">
-            {myVote === Status.Pending ? 'Cast your vote' : 'You voted for'}
-          </Text>
-          <div className="flex gap-4">
-            <Button
-              variant="solid"
-              colorScheme="orange"
-              isDisabled={myVote === Status.Accept}
-              onClick={() => onVote(false)}
-            >
-              Reject
-            </Button>
-            <Button
-              variant="solid"
-              colorScheme="green"
-              isDisabled={myVote === Status.Reject}
-              onClick={() => onVote(true)}
-            >
-              Accept
-            </Button>
+        {proposal.status === Status.Pending && (
+          <div className="text-center">
+            <Text className="mb-4 font-bold">
+              {myVote === Status.Pending ? 'Cast your vote' : 'You voted for'}
+            </Text>
+            <div className="flex gap-4">
+              <Button
+                variant="solid"
+                colorScheme="orange"
+                isDisabled={myVote === Status.Accept}
+                onClick={() => onVote(false)}
+              >
+                Reject
+              </Button>
+              <Button
+                variant="solid"
+                colorScheme="green"
+                isDisabled={myVote === Status.Reject}
+                onClick={() => onVote(true)}
+              >
+                Accept
+              </Button>
+            </div>
           </div>
-        </div>
+        )}
 
         <div>
           <GaugeChart
@@ -133,8 +135,8 @@ function Proposal({ proposal }: any) {
       </div>
 
       <p className="text-center m-4">
-        Total received votes are {totalVotes} in which {parseInt(proposal.totalNoOfAcceptVotes)}{' '}
-        have accepted and {parseInt(proposal.totalNoOfAcceptVotes)} have rejected.
+        Total votes: {totalVotes} Accepted: {parseInt(proposal.totalNoOfAcceptVotes)} Rejected:{' '}
+        {parseInt(proposal.totalNoOfRejectVotes)}
         <br />
         <Link href={`/proposal/${proposal.id}`} className="text-blue-700 underline">
           Details
