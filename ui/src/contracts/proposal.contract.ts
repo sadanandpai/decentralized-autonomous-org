@@ -1,37 +1,8 @@
 import { ethers } from 'ethers';
 import { useMetaMaskStore } from '@/actions/metaMask.store';
 
-const contractAddress = '0x1696ed0282A1C8f465c5eACad0FC30ddC7eA1778';
+const contractAddress = '0xE76e2DE978bD34908111cD2aBE3157FD825B3892';
 const abi = [
-  {
-    inputs: [
-      {
-        internalType: 'string',
-        name: '_title',
-        type: 'string',
-      },
-      {
-        internalType: 'string',
-        name: '_description',
-        type: 'string',
-      },
-      {
-        internalType: 'string',
-        name: '_uploadDocPath',
-        type: 'string',
-      },
-    ],
-    name: 'createProposal',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
   {
     inputs: [
       {
@@ -65,18 +36,82 @@ const abi = [
   {
     inputs: [
       {
-        internalType: 'bool',
-        name: '_status',
-        type: 'bool',
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
       },
       {
         internalType: 'uint256',
-        name: '_proposalId',
+        name: '',
         type: 'uint256',
       },
     ],
-    name: 'vote',
-    outputs: [],
+    name: 'ProposalUserAddresses',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    name: 'ProposalVotingDetails',
+    outputs: [
+      {
+        internalType: 'address',
+        name: 'user',
+        type: 'address',
+      },
+      {
+        internalType: 'enum Proposal.VotingStatus',
+        name: 'vS',
+        type: 'uint8',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'string',
+        name: '_title',
+        type: 'string',
+      },
+      {
+        internalType: 'string',
+        name: '_description',
+        type: 'string',
+      },
+      {
+        internalType: 'string',
+        name: '_uploadDocPath',
+        type: 'string',
+      },
+    ],
+    name: 'createProposal',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
     stateMutability: 'nonpayable',
     type: 'function',
   },
@@ -177,6 +212,37 @@ const abi = [
     type: 'function',
   },
   {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_proposalId',
+        type: 'uint256',
+      },
+    ],
+    name: 'getProposalVotingDetails',
+    outputs: [
+      {
+        components: [
+          {
+            internalType: 'address',
+            name: 'user',
+            type: 'address',
+          },
+          {
+            internalType: 'enum Proposal.VotingStatus',
+            name: 'vS',
+            type: 'uint8',
+          },
+        ],
+        internalType: 'struct Proposal.VotingDetails[]',
+        name: '',
+        type: 'tuple[]',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
     inputs: [],
     name: 'proposalId',
     outputs: [
@@ -261,25 +327,19 @@ const abi = [
   {
     inputs: [
       {
+        internalType: 'bool',
+        name: '_status',
+        type: 'bool',
+      },
+      {
         internalType: 'uint256',
-        name: '',
+        name: '_proposalId',
         type: 'uint256',
       },
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
     ],
-    name: 'ProposalVotingDetails',
-    outputs: [
-      {
-        internalType: 'enum Proposal.VotingStatus',
-        name: '',
-        type: 'uint8',
-      },
-    ],
-    stateMutability: 'view',
+    name: 'vote',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
 ];

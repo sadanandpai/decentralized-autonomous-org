@@ -1,9 +1,7 @@
-import { useEffect, useState } from 'react';
-
 import NewProposal from './NewProposal';
 import dynamic from 'next/dynamic';
-import { fetchProposals } from '@/actions/proposal.action';
 import { shallow } from 'zustand/shallow';
+import { useEffect } from 'react';
 import { useMetaMaskStore } from '@/actions/metaMask.store';
 import { useProposalsStore } from '@/actions/proposals.store';
 import { useRouter } from 'next/router';

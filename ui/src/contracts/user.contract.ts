@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import { useMetaMaskStore } from '@/actions/metaMask.store';
 
-const contractAddress = '0xFCe3C3AC02d31776753D1868167fE343fB174a1B';
+const contractAddress = '0x8Cb095eD34A75dc03B27eb91EE6168Ba2ca3dfDb';
 const abi = [
   {
     anonymous: false,

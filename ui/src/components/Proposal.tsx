@@ -1,13 +1,23 @@
-import { Button, Card, CardBody, CardFooter, CardHeader, Text, useToast } from '@chakra-ui/react';
-import { getMyVote, voteForProposal } from '@/actions/proposal.action';
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Tag,
+  Text,
+  useToast,
+} from '@chakra-ui/react';
+import { getVotersList, voteForProposal } from '@/actions/proposal.action';
 import { useEffect, useState } from 'react';
 
 import GaugeChart from 'react-gauge-chart';
+import Link from 'next/link';
 import { getFailedToast } from '@/constants/toast.data';
 import { useMetaMaskStore } from '@/actions/metaMask.store';
 import { useProposalsStore } from '@/actions/proposals.store';
 
-enum VotingStatus {
+enum Status {
   Pending,
   Accept,
   Reject,
@@ -15,8 +25,7 @@ enum VotingStatus {
 
 function Proposal({ proposal }: any) {
   const toast = useToast();
-  const [myVote, setMyVote] = useState<VotingStatus | null>(null);
-  const [isVoted, setIsVoted] = useState(false);
+  const [myVote, setMyVote] = useState<Status | null>(null);
   const account = useMetaMaskStore((state) => state.account);
   const getProposals = useProposalsStore((state) => state.getProposals);
 
@@ -27,22 +36,23 @@ function Proposal({ proposal }: any) {
 
   const getVoteDetails = async () => {
     try {
-      setMyVote(await getMyVote(parseInt(proposal.id), account!));
+      const votersList = await getVotersList(parseInt(proposal.id));
+      const vote = votersList.find(
+        (voter: any) => voter.user?.toLowerCase() === account?.toLowerCase()
+      )?.vS;
+      setMyVote(vote ?? Status.Pending);
     } catch (e: any) {
       toast(getFailedToast(e.reason));
     }
   };
 
   const onVote = async (vote: boolean) => {
-    if (myVote === VotingStatus.Pending && !isVoted) {
-      setIsVoted(true);
+    if (myVote === Status.Pending) {
       try {
         const txn = await voteForProposal(vote, parseInt(proposal.id));
         await txn.wait();
-        setIsVoted(false);
       } catch (e: any) {
         toast(getFailedToast(e.reason));
-        setIsVoted(false);
       }
       await getVoteDetails();
       getProposals();
@@ -50,7 +60,9 @@ function Proposal({ proposal }: any) {
   };
 
   useEffect(() => {
-    getVoteDetails();
+    if (proposal.status === Status.Pending) {
+      getVoteDetails();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -78,50 +90,66 @@ function Proposal({ proposal }: any) {
   );
 
   const cardFooter = (
-    <CardFooter className="flex items-center flex-col gap-4 md:flex-row md:justify-between">
-      <a href={proposal.uploadDocPath} target="blank" className="text-blue-700 underline">
-        Document link
-      </a>
+    <CardFooter className="flex flex-col">
+      <div className="flex items-center flex-col gap-4 md:flex-row md:justify-between">
+        <a href={proposal.uploadDocPath} target="blank" className="text-blue-700 underline">
+          Document link
+        </a>
 
-      <div className="text-center">
-        <Text className="mb-4 font-bold">
-          {myVote === VotingStatus.Pending ? 'Cast your vote' : 'You voted for'}
-        </Text>
-        <div className="flex gap-4">
-          <Button
-            variant="solid"
-            colorScheme="orange"
-            isDisabled={myVote === VotingStatus.Accept}
-            onClick={() => onVote(false)}
-          >
-            Reject
-          </Button>
-          <Button
-            variant="solid"
-            colorScheme="green"
-            isDisabled={myVote === VotingStatus.Reject}
-            onClick={() => onVote(true)}
-          >
-            Accept
-          </Button>
+        <div className="text-center">
+          <Text className="mb-4 font-bold">
+            {myVote === Status.Pending ? 'Cast your vote' : 'You voted for'}
+          </Text>
+          <div className="flex gap-4">
+            <Button
+              variant="solid"
+              colorScheme="orange"
+              isDisabled={myVote === Status.Accept}
+              onClick={() => onVote(false)}
+            >
+              Reject
+            </Button>
+            <Button
+              variant="solid"
+              colorScheme="green"
+              isDisabled={myVote === Status.Reject}
+              onClick={() => onVote(true)}
+            >
+              Accept
+            </Button>
+          </div>
+        </div>
+
+        <div>
+          <GaugeChart
+            nrOfLevels={10}
+            colors={['red', 'green']}
+            arcWidth={0.3}
+            percent={percentageOfAcceptance}
+            textColor="black"
+            needleColor="grey"
+          />
         </div>
       </div>
 
-      <div>
-        <GaugeChart
-          nrOfLevels={10}
-          colors={['red', 'green']}
-          arcWidth={0.3}
-          percent={percentageOfAcceptance}
-          textColor="black"
-          needleColor="grey"
-        />
-      </div>
+      <p className="text-center m-4">
+        Total received votes are {totalVotes} in which {parseInt(proposal.totalNoOfAcceptVotes)}{' '}
+        have accepted and {parseInt(proposal.totalNoOfAcceptVotes)} have rejected.
+        <br />
+        <Link href={`/proposal/${proposal.id}`} className="text-blue-700 underline">
+          Details
+        </Link>
+      </p>
     </CardFooter>
   );
 
   return (
     <Card className="mb-8" variant="filled">
+      {proposal.status === Status.Pending && (
+        <Tag className="absolute right-4 -translate-y-1/2" size="lg" color="blue">
+          Active
+        </Tag>
+      )}
       {cardHeader}
       {cardBody}
       {cardFooter}

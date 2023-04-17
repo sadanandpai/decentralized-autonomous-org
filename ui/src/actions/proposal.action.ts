@@ -8,8 +8,8 @@ export const createNewProposal = async (title: string, description: string, docP
   return await getProposalContract().createProposal(title, description, docPath);
 };
 
-export const getMyVote = async (proposalId: number, account: string) => {
-  return await getProposalContract().ProposalVotingDetails(proposalId, account);
+export const getVotersList = async (proposalId: number) => {
+  return await getProposalContract().getProposalVotingDetails(proposalId);
 };
 
 export const voteForProposal = async (status: boolean, proposalId: number) => {

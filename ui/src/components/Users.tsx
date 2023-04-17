@@ -1,40 +1,11 @@
-import { Card, CardBody, CardHeader, Text, useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 
-import Image from 'next/image';
+import UserDetails from './UserDetails';
 import { getAllUsers } from '@/actions/user.action';
 import { getFailedToast } from '@/constants/toast.data';
 import { useMetaMaskStore } from '@/actions/metaMask.store';
 import { useRouter } from 'next/router';
-
-function User({ user }: any) {
-  return (
-    <Card className="mb-8" variant={'filled'}>
-      <CardHeader>
-        <Text>
-          <strong>Address: </strong> {user.userAddress}
-        </Text>
-      </CardHeader>
-      <CardBody className="flex justify-between">
-        <div>
-          <Text>
-            <strong>Name: </strong> {user.firstName} {user.lastName}
-          </Text>
-          <Text className="mt-4">
-            <strong>Email: </strong> {user.email}
-          </Text>
-        </div>
-        <Image
-          src={user.pic}
-          alt="display pic"
-          className="border border-black border-solid rounded-full"
-          width={60}
-          height={60}
-        />
-      </CardBody>
-    </Card>
-  );
-}
+import { useToast } from '@chakra-ui/react';
 
 function Users() {
   const toast = useToast();
@@ -54,8 +25,6 @@ function Users() {
   const getUsers = async () => {
     try {
       const users = await getAllUsers();
-      console.log(users);
-
       setUsers(users);
     } catch (e: any) {
       toast(getFailedToast(e.reason ?? e.code));
@@ -69,7 +38,7 @@ function Users() {
   return (
     <div className="m-auto my-8 px-6 md:max-w-4xl">
       {users.map((user: any) => (
-        <User key={user.userAddress} user={user} />
+        <UserDetails key={user.userAddress} user={user} />
       ))}
     </div>
   );

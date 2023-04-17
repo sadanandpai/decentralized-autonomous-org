@@ -8,6 +8,7 @@ export default function ProfilePage() {
         <title>DAO: Users</title>
       </Head>
       <main>
+        <h2 className="text-2xl font-medium mt-8 text-center">Users of DAO system</h2>
         <Users />
       </main>
     </>
