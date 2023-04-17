@@ -42,8 +42,15 @@ contract Proposal {
     uint extensionCount;
   }
 
+  struct VotingDetails {
+      address user;
+      VotingStatus vS;
+  }
+
   event NewProposalCreated(uint indexed proposalId, string message);
-  mapping(uint => mapping(address => VotingStatus)) public ProposalVotingDetails;
+  mapping(uint => VotingDetails[]) public ProposalVotingDetails;
+  mapping(uint => address[]) public ProposalUserAddresses;
+//   mapping(uint => address[])
 
   ProposalStruct[] public proposals;
 
@@ -84,31 +91,39 @@ contract Proposal {
       proposals[_proposalId].status == ProposalStatus.Active,
       'Proposal is not active for voting'
     );
-    require(proposals[_proposalId].owner != msg.sender, "Owner can't vote");
+    // require(proposals[_proposalId].owner != msg.sender, "Owner can't vote");
 
-    require(
-      ProposalVotingDetails[_proposalId][msg.sender] == VotingStatus.Pending,
-      'You have already voted'
-    );
+    address[] memory proposalUserAddresses = ProposalUserAddresses[_proposalId];
+    for (uint256 pUA = 0; pUA < proposalUserAddresses.length; pUA++) {
+            if (proposalUserAddresses[pUA] == msg.sender)
+                revert("You have already voted");
+        }
 
     updateProposalVote(_proposalId, _status);
     processProposalVote(_proposalId);
   }
 
   function updateProposalVote(uint _proposalId, bool _status) internal {
+    //   VotingDetails[] votingDetails;
+       VotingDetails memory vD;
+       vD.user = msg.sender;
+
     if (_status == true) {
-      ProposalVotingDetails[_proposalId][msg.sender] = VotingStatus.Accept;
-      proposals[_proposalId].totalNoOfAcceptVotes += 1;
+        vD.vS = VotingStatus.Accept;
+        ProposalVotingDetails[_proposalId].push(vD);
+        proposals[_proposalId].totalNoOfAcceptVotes += 1;
     } else {
+        vD.vS = VotingStatus.Reject;
+        ProposalVotingDetails[_proposalId].push(vD);
       proposals[_proposalId].totalNoOfRejectVotes += 1;
-      ProposalVotingDetails[_proposalId][msg.sender] = VotingStatus.Reject;
     }
     proposals[_proposalId].totalNoOfVotes += 1;
+    ProposalUserAddresses[_proposalId].push(msg.sender);
   }
 
   function processProposalVote(uint _proposalId) internal {
     if (proposals[_proposalId].endTime >= block.timestamp * 1000) {
-      if ((dUser.userCount() - 1) == proposals[_proposalId].totalNoOfVotes) {
+      if ((dUser.userCount()) == proposals[_proposalId].totalNoOfVotes) {
         proposals[_proposalId].status = calculateVotingResult(_proposalId);
         currentActiveProposal = false;
       }
@@ -142,5 +157,9 @@ contract Proposal {
 
   function getAllProposals() public view returns (ProposalStruct[] memory) {
     return proposals;
+  }
+
+  function getProposalVotingDetails(uint _proposalId) public view returns(VotingDetails[] memory) {
+      return ProposalVotingDetails[_proposalId];
   }
 }
