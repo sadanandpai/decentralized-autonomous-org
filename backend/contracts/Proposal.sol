@@ -8,9 +8,9 @@ contract Proposal {
   DaoUser public dUser;
   uint public proposalId = 0;
   bool public currentActiveProposal = false;
-  uint constant MAXIMUM_EXTENSION_COUNT = 2;
-  uint constant PROPOSAL_TIME = 1 minutes;
-  uint constant EXTENSION_TIME = 30 seconds;
+  uint constant MAXIMUM_EXTENSION_COUNT = 1;
+  uint constant PROPOSAL_TIME = 5 minutes;
+  uint constant EXTENSION_TIME = 3 minutes;
 
   constructor(address daoUser) {
     dUser = DaoUser(daoUser);
@@ -122,18 +122,18 @@ contract Proposal {
   }
 
   function processProposalVote(uint _proposalId) internal {
-    if (proposals[_proposalId].endTime >= block.timestamp * 1000) {
-      if ((dUser.userCount()) == proposals[_proposalId].totalNoOfVotes) {
+    if (proposals[_proposalId].endTime >= block.timestamp * 1000 && proposals[_proposalId].extensionCount == 0) {
+      if (dUser.userCount() == proposals[_proposalId].totalNoOfVotes) {
         proposals[_proposalId].status = calculateVotingResult(_proposalId);
         currentActiveProposal = false;
       }
     } else {
-      if (proposals[_proposalId].totalNoOfVotes % dUser.userCount() >= 80) {
+      if (((8000 * dUser.userCount())/100) <=  (proposals[_proposalId].totalNoOfVotes * 100)) {
         proposals[_proposalId].status = calculateVotingResult(_proposalId);
         currentActiveProposal = false;
       } else {
         if (proposals[_proposalId].extensionCount <= MAXIMUM_EXTENSION_COUNT) {
-          proposals[_proposalId].endTime += EXTENSION_TIME;
+          proposals[_proposalId].endTime += (EXTENSION_TIME * 1000);
           proposals[_proposalId].extensionCount += 1;
         } else {
           proposals[_proposalId].status = calculateVotingResult(_proposalId);
