@@ -28,7 +28,17 @@ contract DaoUser {
     string calldata email,
     string calldata pic
   ) payable public {
+
+    //validations
+    require(bytes(firstName).length > 0, "First name is required");
+    require(bytes(lastName).length > 0, "Last name is required");
+    require(bytes(email).length > 0, "Email is required");
+    require(bytes(pic).length > 0, "Pic is required");
+    require(bytes(email).length <= 254, "Email must be less than or equal to 254 characters");
+    require(bytes(firstName).length <= 50, "First name must be less than or equal to 50 characters");
+    require(bytes(lastName).length <= 50, "Last name must be less than or equal to 50 characters");
     require(msg.value >= 10**18, "Invalid Amount");
+    
     // Check if user already exists
     require(bytes(userDetails[msg.sender].firstName).length == 0, 'User already exists');
 
