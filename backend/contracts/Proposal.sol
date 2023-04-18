@@ -73,11 +73,7 @@ contract Proposal {
     proposal.uploadDocPath = _uploadDocPath;
     proposal.status = ProposalStatus.Active;
     proposal.id = proposalId++;
-    proposal.totalNoOfRejectVotes = 0;
-    proposal.totalNoOfAcceptVotes = 0;
-    proposal.totalNoOfVotes = 0;
     proposal.endTime = (block.timestamp + PROPOSAL_TIME) * 1000;
-    proposal.extensionCount = 0;
 
     proposals.push(proposal);
     emit NewProposalCreated(proposalId - 1, 'New Proposal Created');
@@ -95,8 +91,7 @@ contract Proposal {
 
     address[] memory proposalUserAddresses = ProposalUserAddresses[_proposalId];
     for (uint256 pUA = 0; pUA < proposalUserAddresses.length; pUA++) {
-            if (proposalUserAddresses[pUA] == msg.sender)
-                revert("You have already voted");
+        require(proposalUserAddresses[pUA] != msg.sender, "You have already voted");
         }
 
     updateProposalVote(_proposalId, _status);
