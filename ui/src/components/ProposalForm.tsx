@@ -1,11 +1,15 @@
-import { Button, FormControl, FormHelperText, FormLabel, Input } from '@chakra-ui/react';
-import { getBalance, useMetaMaskStore } from '@/actions/metaMask.store';
-import { getFailedToast, updateToast } from '@/constants/toast.data';
-import { useEffect, useState } from 'react';
+import { Button, FormControl, FormLabel, Input } from '@chakra-ui/react';
+import {
+  getFailedToast,
+  getSuccessToast,
+  txnSuccessToast,
+  updateToast,
+} from '@/constants/toast.data';
 
 import { Spinner } from '@chakra-ui/react';
 import { createNewProposal } from '@/actions/proposal.action';
-import { useRouter } from 'next/router';
+import { useProposalsStore } from '@/actions/proposals.store';
+import { useState } from 'react';
 import { useToast } from '@chakra-ui/react';
 
 function ProposalForm({ setIsNewProposal }: any) {
@@ -14,16 +18,20 @@ function ProposalForm({ setIsNewProposal }: any) {
   const [description, setDescription] = useState<string>('');
   const [document, setDocument] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const getProposals = useProposalsStore((state) => state.getProposals);
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await createNewProposal(title, description, document);
-      toast(updateToast);
+      const txn = await createNewProposal(title, description, document);
+      toast(txnSuccessToast);
+      setIsNewProposal(false);
+      await txn.wait();
+      toast(getSuccessToast('Proposal created', title));
+      getProposals();
     } catch (e: any) {
       toast(getFailedToast(e.reason));
-    } finally {
       setIsLoading(false);
     }
   };

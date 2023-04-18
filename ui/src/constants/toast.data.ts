@@ -10,6 +10,12 @@ export const updateToast: UseToastOptions = {
   status: 'success',
 };
 
+export const txnSuccessToast: UseToastOptions = {
+  title: 'Transaction is initiated successfully',
+  description: 'You will be notified on completion',
+  status: 'success',
+};
+
 export const connectToast: UseToastOptions = {
   title: 'Successfully connected',
   status: 'success',
@@ -44,6 +50,12 @@ export const connectFailedToast: UseToastOptions = {
   isClosable: true,
   position: 'bottom-right',
 };
+
+export const getSuccessToast = (title: string, description: string): UseToastOptions => ({
+  title,
+  description,
+  status: 'success',
+});
 
 export const getFailedToast = (description: string): UseToastOptions => ({
   title: 'Somthing went wrong',

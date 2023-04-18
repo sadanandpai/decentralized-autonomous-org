@@ -21,7 +21,7 @@ export const useProposalsStore = create<ProposalsStateIntf>((set) => ({
 
       set({
         proposals: proposals.reverse(),
-        activeProposal: proposals[0].status === 0 ? null : proposals[0],
+        activeProposal: proposals[0]?.status === 0 ? proposals[0] : null,
       });
     } catch (e) {
       toast(connectFailedToast);

@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-import 'hardhat/console.sol';
 import './DaoUser.sol';
 
 contract Proposal {
@@ -43,14 +42,14 @@ contract Proposal {
   }
 
   struct VotingDetails {
-      address user;
-      VotingStatus vS;
+    address user;
+    VotingStatus vS;
   }
 
   event NewProposalCreated(uint indexed proposalId, string message);
   mapping(uint => VotingDetails[]) public ProposalVotingDetails;
   mapping(uint => address[]) public ProposalUserAddresses;
-//   mapping(uint => address[])
+  //   mapping(uint => address[])
 
   ProposalStruct[] public proposals;
 
@@ -91,8 +90,8 @@ contract Proposal {
 
     address[] memory proposalUserAddresses = ProposalUserAddresses[_proposalId];
     for (uint256 pUA = 0; pUA < proposalUserAddresses.length; pUA++) {
-        require(proposalUserAddresses[pUA] != msg.sender, "You have already voted");
-        }
+      require(proposalUserAddresses[pUA] != msg.sender, 'You have already voted');
+    }
 
     updateProposalVote(_proposalId, _status);
     processProposalVote(_proposalId);
@@ -100,16 +99,16 @@ contract Proposal {
 
   function updateProposalVote(uint _proposalId, bool _status) internal {
     //   VotingDetails[] votingDetails;
-       VotingDetails memory vD;
-       vD.user = msg.sender;
+    VotingDetails memory vD;
+    vD.user = msg.sender;
 
     if (_status == true) {
-        vD.vS = VotingStatus.Accept;
-        ProposalVotingDetails[_proposalId].push(vD);
-        proposals[_proposalId].totalNoOfAcceptVotes += 1;
+      vD.vS = VotingStatus.Accept;
+      ProposalVotingDetails[_proposalId].push(vD);
+      proposals[_proposalId].totalNoOfAcceptVotes += 1;
     } else {
-        vD.vS = VotingStatus.Reject;
-        ProposalVotingDetails[_proposalId].push(vD);
+      vD.vS = VotingStatus.Reject;
+      ProposalVotingDetails[_proposalId].push(vD);
       proposals[_proposalId].totalNoOfRejectVotes += 1;
     }
     proposals[_proposalId].totalNoOfVotes += 1;
@@ -117,13 +116,16 @@ contract Proposal {
   }
 
   function processProposalVote(uint _proposalId) internal {
-    if (proposals[_proposalId].endTime >= block.timestamp * 1000 && proposals[_proposalId].extensionCount == 0) {
+    if (
+      proposals[_proposalId].endTime >= block.timestamp * 1000 &&
+      proposals[_proposalId].extensionCount == 0
+    ) {
       if (dUser.userCount() == proposals[_proposalId].totalNoOfVotes) {
         proposals[_proposalId].status = calculateVotingResult(_proposalId);
         currentActiveProposal = false;
       }
     } else {
-      if (((8000 * dUser.userCount())/100) <=  (proposals[_proposalId].totalNoOfVotes * 100)) {
+      if (((8000 * dUser.userCount()) / 100) <= (proposals[_proposalId].totalNoOfVotes * 100)) {
         proposals[_proposalId].status = calculateVotingResult(_proposalId);
         currentActiveProposal = false;
       } else {
@@ -154,7 +156,7 @@ contract Proposal {
     return proposals;
   }
 
-  function getProposalVotingDetails(uint _proposalId) public view returns(VotingDetails[] memory) {
-      return ProposalVotingDetails[_proposalId];
+  function getProposalVotingDetails(uint _proposalId) public view returns (VotingDetails[] memory) {
+    return ProposalVotingDetails[_proposalId];
   }
 }
