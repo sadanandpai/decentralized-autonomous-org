@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
+import 'hardhat/console.sol';
 import './DaoUser.sol';
 
 contract Proposal {
@@ -11,7 +12,7 @@ contract Proposal {
   uint constant PROPOSAL_TIME = 5 minutes;
   uint constant EXTENSION_TIME = 3 minutes;
 
-  constructor(address daoUser) {
+  constructor(address daoUser) payable {
     dUser = DaoUser(daoUser);
   }
 
@@ -28,7 +29,7 @@ contract Proposal {
   }
 
   struct ProposalStruct {
-    address owner;
+    address payable owner;
     uint id;
     ProposalStatus status;
     string title;
@@ -42,14 +43,14 @@ contract Proposal {
   }
 
   struct VotingDetails {
-    address user;
-    VotingStatus vS;
+      address user;
+      VotingStatus vS;
   }
 
   event NewProposalCreated(uint indexed proposalId, string message);
   mapping(uint => VotingDetails[]) public ProposalVotingDetails;
   mapping(uint => address[]) public ProposalUserAddresses;
-  //   mapping(uint => address[])
+//   mapping(uint => address[])
 
   ProposalStruct[] public proposals;
 
@@ -63,10 +64,11 @@ contract Proposal {
     string calldata _title,
     string calldata _description,
     string calldata _uploadDocPath
-  ) external canCreateProposal returns (uint) {
+  ) payable external canCreateProposal returns (uint) {
+    require(msg.value >= 10**18, "Invalid Amount");
     require(dUser.isUserAddressPresent(address(msg.sender)), 'User Not registered');
     ProposalStruct memory proposal;
-    proposal.owner = msg.sender;
+    proposal.owner = payable(msg.sender);
     proposal.title = _title;
     proposal.description = _description;
     proposal.uploadDocPath = _uploadDocPath;
@@ -79,7 +81,7 @@ contract Proposal {
     return proposalId - 1;
   }
 
-  function vote(bool _status, uint _proposalId) external {
+  function vote(bool _status, uint _proposalId) payable external {
     require(proposals.length != 0 && proposals.length > _proposalId, 'Invalid Proposal');
     require(dUser.isUserAddressPresent(msg.sender), 'User Not registered');
     require(
@@ -90,25 +92,26 @@ contract Proposal {
 
     address[] memory proposalUserAddresses = ProposalUserAddresses[_proposalId];
     for (uint256 pUA = 0; pUA < proposalUserAddresses.length; pUA++) {
-      require(proposalUserAddresses[pUA] != msg.sender, 'You have already voted');
-    }
+        require(proposalUserAddresses[pUA] != msg.sender, "You have already voted");
+        }
 
     updateProposalVote(_proposalId, _status);
     processProposalVote(_proposalId);
+
   }
 
   function updateProposalVote(uint _proposalId, bool _status) internal {
     //   VotingDetails[] votingDetails;
-    VotingDetails memory vD;
-    vD.user = msg.sender;
+       VotingDetails memory vD;
+       vD.user = msg.sender;
 
     if (_status == true) {
-      vD.vS = VotingStatus.Accept;
-      ProposalVotingDetails[_proposalId].push(vD);
-      proposals[_proposalId].totalNoOfAcceptVotes += 1;
+        vD.vS = VotingStatus.Accept;
+        ProposalVotingDetails[_proposalId].push(vD);
+        proposals[_proposalId].totalNoOfAcceptVotes += 1;
     } else {
-      vD.vS = VotingStatus.Reject;
-      ProposalVotingDetails[_proposalId].push(vD);
+        vD.vS = VotingStatus.Reject;
+        ProposalVotingDetails[_proposalId].push(vD);
       proposals[_proposalId].totalNoOfRejectVotes += 1;
     }
     proposals[_proposalId].totalNoOfVotes += 1;
@@ -116,16 +119,13 @@ contract Proposal {
   }
 
   function processProposalVote(uint _proposalId) internal {
-    if (
-      proposals[_proposalId].endTime >= block.timestamp * 1000 &&
-      proposals[_proposalId].extensionCount == 0
-    ) {
+    if (proposals[_proposalId].endTime >= block.timestamp * 1000 && proposals[_proposalId].extensionCount == 0) {
       if (dUser.userCount() == proposals[_proposalId].totalNoOfVotes) {
         proposals[_proposalId].status = calculateVotingResult(_proposalId);
         currentActiveProposal = false;
       }
     } else {
-      if (((8000 * dUser.userCount()) / 100) <= (proposals[_proposalId].totalNoOfVotes * 100)) {
+      if (((8000 * dUser.userCount())/100) <=  (proposals[_proposalId].totalNoOfVotes * 100)) {
         proposals[_proposalId].status = calculateVotingResult(_proposalId);
         currentActiveProposal = false;
       } else {
@@ -140,12 +140,13 @@ contract Proposal {
     }
   }
 
-  function calculateVotingResult(uint _proposalId) internal view returns (ProposalStatus) {
+  function calculateVotingResult(uint _proposalId) internal returns (ProposalStatus) {
     if (proposals[_proposalId].totalNoOfAcceptVotes == 0) {
       return ProposalStatus.Rejected;
     } else if (
       proposals[_proposalId].totalNoOfAcceptVotes >= proposals[_proposalId].totalNoOfRejectVotes
     ) {
+      payable(proposals[_proposalId].owner).transfer(10**18);
       return ProposalStatus.Accepted;
     } else {
       return ProposalStatus.Rejected;
@@ -156,7 +157,7 @@ contract Proposal {
     return proposals;
   }
 
-  function getProposalVotingDetails(uint _proposalId) public view returns (VotingDetails[] memory) {
-    return ProposalVotingDetails[_proposalId];
+  function getProposalVotingDetails(uint _proposalId) public view returns(VotingDetails[] memory) {
+      return ProposalVotingDetails[_proposalId];
   }
 }

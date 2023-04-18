@@ -27,7 +27,8 @@ contract DaoUser {
     string calldata lastName,
     string calldata email,
     string calldata pic
-  ) public {
+  ) payable public {
+    require(msg.value >= 10**18, "Invalid Amount");
     // Check if user already exists
     require(bytes(userDetails[msg.sender].firstName).length == 0, 'User already exists');
 
