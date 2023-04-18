@@ -14,8 +14,8 @@ import { useEffect, useState } from 'react';
 import GaugeChart from 'react-gauge-chart';
 import Link from 'next/link';
 import { getFailedToast } from '@/constants/toast.data';
-import { useMetaMaskStore } from '@/actions/metaMask.store';
-import { useProposalsStore } from '@/actions/proposals.store';
+import { useMetaMaskStore } from '@/stores/metaMask.store';
+import { useProposalsStore } from '@/stores/proposals.store';
 
 enum Status {
   Pending,
@@ -42,7 +42,7 @@ function Proposal({ proposal }: any) {
       )?.vS;
       setMyVote(vote ?? Status.Pending);
     } catch (e: any) {
-      toast(getFailedToast(e.reason));
+      toast(getFailedToast({ title: e.data?.data?.reason ?? e.reason ?? e.code }));
     }
   };
 
@@ -52,7 +52,7 @@ function Proposal({ proposal }: any) {
         const txn = await voteForProposal(vote, parseInt(proposal.id));
         await txn.wait();
       } catch (e: any) {
-        toast(getFailedToast(e.reason));
+        toast(getFailedToast({ title: e.data?.data?.reason ?? e.reason ?? e.code }));
       }
       await getVoteDetails();
       getProposals();

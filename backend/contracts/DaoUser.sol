@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.10;
 
 contract DaoUser {
   struct User {
@@ -27,18 +27,20 @@ contract DaoUser {
     string calldata lastName,
     string calldata email,
     string calldata pic
-  ) payable public {
-
+  ) public payable {
     //validations
-    require(bytes(firstName).length > 0, "First name is required");
-    require(bytes(lastName).length > 0, "Last name is required");
-    require(bytes(email).length > 0, "Email is required");
-    require(bytes(pic).length > 0, "Pic is required");
-    require(bytes(email).length <= 254, "Email must be less than or equal to 254 characters");
-    require(bytes(firstName).length <= 50, "First name must be less than or equal to 50 characters");
-    require(bytes(lastName).length <= 50, "Last name must be less than or equal to 50 characters");
-    require(msg.value >= 10**18, "Invalid Amount");
-    
+    require(bytes(firstName).length > 0, 'First name is required');
+    require(bytes(lastName).length > 0, 'Last name is required');
+    require(bytes(email).length > 0, 'Email is required');
+    require(bytes(pic).length > 0, 'Pic is required');
+    require(bytes(email).length <= 254, 'Email must be less than or equal to 254 characters');
+    require(
+      bytes(firstName).length <= 50,
+      'First name must be less than or equal to 50 characters'
+    );
+    require(bytes(lastName).length <= 50, 'Last name must be less than or equal to 50 characters');
+    require(msg.value == 0.1 * 10 ** 18, 'Enrollment charge should be 0.1 ETH');
+
     // Check if user already exists
     require(bytes(userDetails[msg.sender].firstName).length == 0, 'User already exists');
 

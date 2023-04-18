@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import MetaMaskButton from './MetaMaskButton';
 import { shallow } from 'zustand/shallow';
-import { useMetaMaskStore } from '@/actions/metaMask.store';
+import { useMetaMaskStore } from '@/stores/metaMask.store';
 
 function NavBar() {
   const [provider, isNewUser] = useMetaMaskStore(

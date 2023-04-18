@@ -22,7 +22,7 @@ function Voters() {
         const voters = await getVotersList(+id);
         setVoters(voters);
       } catch (e: any) {
-        toast(getFailedToast(e.reason ?? e.code));
+        toast(getFailedToast({ title: e.data?.data?.reason ?? e.reason ?? e.code }));
       }
     }
   };

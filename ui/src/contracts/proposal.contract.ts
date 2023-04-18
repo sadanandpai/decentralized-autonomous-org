@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
-import { useMetaMaskStore } from '@/actions/metaMask.store';
+import { useMetaMaskStore } from '@/stores/metaMask.store';
 
-const contractAddress = '0x8AfBf08F6c441a10B503c5De75185a26dFd79512';
+const contractAddress = '0xb49385C77F16dc7463999172c428bE3d58C9013A';
 const abi = [
   {
     inputs: [
@@ -11,7 +11,7 @@ const abi = [
         type: 'address',
       },
     ],
-    stateMutability: 'nonpayable',
+    stateMutability: 'payable',
     type: 'constructor',
   },
   {
@@ -112,7 +112,7 @@ const abi = [
         type: 'uint256',
       },
     ],
-    stateMutability: 'nonpayable',
+    stateMutability: 'payable',
     type: 'function',
   },
   {
@@ -148,7 +148,7 @@ const abi = [
       {
         components: [
           {
-            internalType: 'address',
+            internalType: 'address payable',
             name: 'owner',
             type: 'address',
           },
@@ -266,7 +266,7 @@ const abi = [
     name: 'proposals',
     outputs: [
       {
-        internalType: 'address',
+        internalType: 'address payable',
         name: 'owner',
         type: 'address',
       },
@@ -339,7 +339,7 @@ const abi = [
     ],
     name: 'vote',
     outputs: [],
-    stateMutability: 'nonpayable',
+    stateMutability: 'payable',
     type: 'function',
   },
 ];

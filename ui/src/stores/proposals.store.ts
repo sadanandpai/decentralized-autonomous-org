@@ -1,7 +1,7 @@
 import { connectFailedToast } from '@/constants/toast.data';
 import { create } from 'zustand';
 import { createStandaloneToast } from '@chakra-ui/react';
-import { fetchProposals } from './proposal.action';
+import { fetchProposals } from '@/actions/proposal.action';
 
 const { toast } = createStandaloneToast();
 

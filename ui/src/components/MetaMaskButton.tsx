@@ -4,7 +4,7 @@ import { getFailedToast } from '@/constants/toast.data';
 import { getUserDetails } from '@/actions/user.action';
 import { shallow } from 'zustand/shallow';
 import { useEffect } from 'react';
-import { useMetaMaskStore } from '@/actions/metaMask.store';
+import { useMetaMaskStore } from '@/stores/metaMask.store';
 import { useRouter } from 'next/router';
 
 function MetaMaskButton() {
@@ -34,7 +34,7 @@ function MetaMaskButton() {
           setIsNewUser(false);
         },
         (e: any) => {
-          toast(getFailedToast(e.reason ?? e.code));
+          toast(getFailedToast({ title: e.data?.data?.reason ?? e.reason ?? e.code }));
         }
       );
     }

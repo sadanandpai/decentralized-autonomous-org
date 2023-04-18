@@ -1,14 +1,9 @@
-import { Button, FormControl, FormLabel, Input } from '@chakra-ui/react';
-import {
-  getFailedToast,
-  getSuccessToast,
-  txnSuccessToast,
-  updateToast,
-} from '@/constants/toast.data';
+import { Button, FormControl, FormLabel, Input, Text } from '@chakra-ui/react';
+import { getFailedToast, getSuccessToast } from '@/constants/toast.data';
 
 import { Spinner } from '@chakra-ui/react';
 import { createNewProposal } from '@/actions/proposal.action';
-import { useProposalsStore } from '@/actions/proposals.store';
+import { useProposalsStore } from '@/stores/proposals.store';
 import { useState } from 'react';
 import { useToast } from '@chakra-ui/react';
 
@@ -25,13 +20,13 @@ function ProposalForm({ setIsNewProposal }: any) {
     setIsLoading(true);
     try {
       const txn = await createNewProposal(title, description, document);
-      toast(txnSuccessToast);
+      toast(getSuccessToast({ title: 'You will be notified on transaction completion' }));
       setIsNewProposal(false);
       await txn.wait();
-      toast(getSuccessToast('Proposal created', title));
+      toast(getSuccessToast({ title, description: 'Proposal created' }));
       getProposals();
     } catch (e: any) {
-      toast(getFailedToast(e.reason));
+      toast(getFailedToast({ title: e.data?.data?.reason ?? e.reason ?? e.code }));
       setIsLoading(false);
     }
   };
@@ -57,6 +52,9 @@ function ProposalForm({ setIsNewProposal }: any) {
         <Button mt={4} colorScheme="teal" type="submit">
           {isLoading ? <Spinner /> : 'Create Proposal'}
         </Button>
+        <Text className="text-center text-sm -mt-6">
+          Proposal creation fee is 0.1 ETH. This will be refunded if proposal gets approved.
+        </Text>
 
         <Button
           variant="outline"

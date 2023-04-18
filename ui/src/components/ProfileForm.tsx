@@ -1,7 +1,7 @@
-import { Button, FormControl, FormHelperText, FormLabel, Input } from '@chakra-ui/react';
+import { Button, FormControl, FormHelperText, FormLabel, Input, Text } from '@chakra-ui/react';
 import { enrollUser, getUserDetails, updateUser } from '@/actions/user.action';
-import { enrollmentToast, getFailedToast, updateToast } from '@/constants/toast.data';
-import { getBalance, useMetaMaskStore } from '@/actions/metaMask.store';
+import { getBalance, useMetaMaskStore } from '@/stores/metaMask.store';
+import { getFailedToast, getSuccessToast } from '@/constants/toast.data';
 import { useEffect, useState } from 'react';
 
 import { shallow } from 'zustand/shallow';
@@ -13,8 +13,8 @@ function ProfileForm() {
   const router = useRouter();
   const provider = useMetaMaskStore((state) => state.provider);
   const account = useMetaMaskStore((state) => state.account)!;
-  const [isNewUser, setIsNewUser] = useMetaMaskStore(
-    (state) => [state.isNewUser, state.setIsNewUser],
+  const [isNewUser, setIsNewUser, resetMetaMask] = useMetaMaskStore(
+    (state) => [state.isNewUser, state.setIsNewUser, state.resetMetaMask],
     shallow
   );
 
@@ -31,7 +31,7 @@ function ProfileForm() {
         getBalance().then((value) => setBalance(value));
         setUserDetails();
       } catch (e: any) {
-        toast(getFailedToast(e.reason));
+        toast(getFailedToast({ title: e.data?.data?.reason ?? e.reason ?? e.code }));
       }
     } else {
       router.push('/');
@@ -55,7 +55,7 @@ function ProfileForm() {
         setIsNewUser(false);
       },
       (e: any) => {
-        toast(getFailedToast(e.reason ?? e.code));
+        toast(getFailedToast({ title: e.data?.data?.reason ?? e.reason ?? e.code }));
       }
     );
   };
@@ -69,21 +69,26 @@ function ProfileForm() {
         setIsLoading(false);
 
         await txn.wait();
-        toast(enrollmentToast);
+        toast(getSuccessToast({ title: 'You are successfully enrolled' }));
         setIsNewUser(false);
       } else {
         const txn = await updateUser(firstName, lastName, email, pic);
         setIsLoading(false);
 
         await txn.wait();
-        toast(updateToast);
+        toast(getSuccessToast({ title: 'Profile updated successfully' }));
       }
     } catch (e: any) {
-      toast(getFailedToast(e.reason));
+      toast(getFailedToast({ title: e.data?.data?.reason ?? e.reason ?? e.code }));
     } finally {
       setIsLoading(false);
       setUserDetails();
     }
+  };
+
+  const onDisconnect = () => {
+    resetMetaMask();
+    router.push('/');
   };
 
   return (
@@ -117,10 +122,19 @@ function ProfileForm() {
           <Input type="text" value={pic} onChange={(e) => setPic(e.target.value)} />
         </FormControl>
 
-        <Button mt={4} colorScheme="teal" type="submit" isLoading={isLoading}>
-          {isNewUser ? 'Enroll' : 'Update'}
-        </Button>
+        <div className="w-full">
+          <Text className="text-center text-sm -mb-2">
+            Enrollment fee is <strong>0.1 ETH</strong>
+          </Text>
+          <Button mt={4} colorScheme="teal" type="submit" isLoading={isLoading} className="w-full">
+            {isNewUser ? 'Enroll' : 'Update'}
+          </Button>
+        </div>
       </form>
+
+      <Button mt={4} colorScheme="orange" className="w-full" onClick={onDisconnect}>
+        Disconnect
+      </Button>
     </div>
   );
 }

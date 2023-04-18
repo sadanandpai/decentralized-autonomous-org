@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import UserDetails from './UserDetails';
 import { getAllUsers } from '@/actions/user.action';
 import { getFailedToast } from '@/constants/toast.data';
-import { useMetaMaskStore } from '@/actions/metaMask.store';
+import { useMetaMaskStore } from '@/stores/metaMask.store';
 import { useRouter } from 'next/router';
 import { useToast } from '@chakra-ui/react';
 
@@ -27,7 +27,7 @@ function Users() {
       const users = await getAllUsers();
       setUsers(users);
     } catch (e: any) {
-      toast(getFailedToast(e.reason ?? e.code));
+      toast(getFailedToast({ title: e.data?.data?.reason ?? e.reason ?? e.code }));
     }
   };
 

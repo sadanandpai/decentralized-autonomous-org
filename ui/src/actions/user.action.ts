@@ -1,3 +1,4 @@
+import { ethers } from 'ethers';
 import { getDaoUserContract } from '@/contracts/user.contract';
 
 export const enrollUser = async (
@@ -6,7 +7,9 @@ export const enrollUser = async (
   email: string,
   pic: string
 ) => {
-  return await getDaoUserContract().addUserDetails(firstName, lastName, email, pic);
+  return await getDaoUserContract().addUserDetails(firstName, lastName, email, pic, {
+    value: ethers.utils.parseEther('0.1'),
+  });
 };
 
 export const updateUser = async (

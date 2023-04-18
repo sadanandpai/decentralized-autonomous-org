@@ -2,8 +2,8 @@ import NewProposal from './NewProposal';
 import dynamic from 'next/dynamic';
 import { shallow } from 'zustand/shallow';
 import { useEffect } from 'react';
-import { useMetaMaskStore } from '@/actions/metaMask.store';
-import { useProposalsStore } from '@/actions/proposals.store';
+import { useMetaMaskStore } from '@/stores/metaMask.store';
+import { useProposalsStore } from '@/stores/proposals.store';
 import { useRouter } from 'next/router';
 
 const Proposal = dynamic(() => import('./Proposal'), {

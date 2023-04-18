@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
-import { useMetaMaskStore } from '@/actions/metaMask.store';
+import { useMetaMaskStore } from '@/stores/metaMask.store';
 
-const contractAddress = '0x7bfEe94B94AF219ccfcd1A3A80A2660955C0cBb7';
+const contractAddress = '0x7aFd3624cF81c1e59a56692920cC8365Aac202BE';
 const abi = [
   {
     anonymous: false,
@@ -65,7 +65,7 @@ const abi = [
     ],
     name: 'addUserDetails',
     outputs: [],
-    stateMutability: 'nonpayable',
+    stateMutability: 'payable',
     type: 'function',
   },
   {

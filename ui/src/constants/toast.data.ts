@@ -1,20 +1,27 @@
 import { UseToastOptions } from '@chakra-ui/react';
 
-export const enrollmentToast: UseToastOptions = {
-  title: 'Successfully enrolled',
-  status: 'success',
-};
+interface TitleDescriptionIntf {
+  title: string;
+  description?: string;
+}
 
-export const updateToast: UseToastOptions = {
-  title: 'Successfully updated',
+export const getSuccessToast = ({
+  title = 'Transaction successful',
+  description,
+}: TitleDescriptionIntf): UseToastOptions => ({
+  title,
+  description,
   status: 'success',
-};
+});
 
-export const txnSuccessToast: UseToastOptions = {
-  title: 'Transaction is initiated successfully',
-  description: 'You will be notified on completion',
-  status: 'success',
-};
+export const getFailedToast = ({
+  title = 'Transaction failed',
+  description,
+}: TitleDescriptionIntf): UseToastOptions => ({
+  title,
+  description,
+  status: 'error',
+});
 
 export const connectToast: UseToastOptions = {
   title: 'Successfully connected',
@@ -50,15 +57,3 @@ export const connectFailedToast: UseToastOptions = {
   isClosable: true,
   position: 'bottom-right',
 };
-
-export const getSuccessToast = (title: string, description: string): UseToastOptions => ({
-  title,
-  description,
-  status: 'success',
-});
-
-export const getFailedToast = (description: string): UseToastOptions => ({
-  title: 'Somthing went wrong',
-  description,
-  status: 'error',
-});
