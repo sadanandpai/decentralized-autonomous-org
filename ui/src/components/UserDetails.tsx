@@ -7,20 +7,21 @@ function UserDetails({ user }: any) {
     <Card className="mb-8" variant={'filled'}>
       <CardHeader>
         <Text>
-          <strong>Address: </strong> {user.userAddress}
+          <strong>Address: </strong> {user?.userAddress}
         </Text>
       </CardHeader>
       <CardBody className="flex justify-between">
         <div>
           <Text>
-            <strong>Name: </strong> {user.firstName} {user.lastName}
+            <strong>Name: </strong> {user?.firstName ?? user?.firstname}
+            {user?.lastName ?? user?.lastname}
           </Text>
           <Text className="mt-4">
-            <strong>Email: </strong> {user.email}
+            <strong>Email: </strong> {user?.email}
           </Text>
         </div>
         <Image
-          src={user.pic}
+          src={user?.pic}
           alt="display pic"
           className="border border-black border-solid rounded-full"
           width={60}

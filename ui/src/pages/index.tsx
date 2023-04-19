@@ -43,6 +43,11 @@ export default function HomePage() {
               threshold majority.
             </p>
           </div>
+          <section>
+            <h3>
+              Built by <strong>Munish Garg, Anand Kumar, and Sadanand Pai</strong>
+            </h3>
+          </section>
         </main>
       </div>
     </>

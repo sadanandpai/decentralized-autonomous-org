@@ -123,12 +123,14 @@ function ProfileForm() {
         </FormControl>
 
         <div className="w-full">
-          <Text className="text-center text-sm -mb-2">
-            Enrollment fee is <strong>0.1 ETH</strong>
-          </Text>
           <Button mt={4} colorScheme="teal" type="submit" isLoading={isLoading} className="w-full">
             {isNewUser ? 'Enroll' : 'Update'}
           </Button>
+          {isNewUser && (
+            <Text className="text-center text-sm -mb-2">
+              Enrollment fee is <strong>0.1 ETH</strong>
+            </Text>
+          )}
         </div>
       </form>
 

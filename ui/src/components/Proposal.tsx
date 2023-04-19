@@ -72,7 +72,10 @@ function Proposal({ proposal }: any) {
         <strong>Proposal Id:</strong> {parseInt(proposal.id)}
       </Text>
       <Text>
-        <strong>Owner:</strong> {proposal.owner}
+        <strong>Owner:</strong>
+        <Link href={`/users/${proposal.owner}`} className="text-blue-700 underline">
+          {proposal.owner}
+        </Link>
       </Text>
     </CardHeader>
   );
