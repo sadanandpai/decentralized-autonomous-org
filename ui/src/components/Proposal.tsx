@@ -82,12 +82,16 @@ function Proposal({ proposal }: any) {
 
   const cardBody = (
     <CardBody>
-      <Text className="mb-4">
+      <Text>
         <strong>Title:</strong> {proposal.title}
       </Text>
-      <Text>
+      <Text className="my-4">
         <strong>Description:</strong>
         {proposal.description}
+      </Text>
+      <Text>
+        <strong>Expiry:</strong>
+        {new Date(parseInt(proposal?.endTime)).toString()}
       </Text>
     </CardBody>
   );

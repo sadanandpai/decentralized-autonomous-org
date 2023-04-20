@@ -41,19 +41,8 @@ export const useMetaMaskStore = create<MetaMaskStateIntf>((set, get) => ({
       const network = await provider.getNetwork();
       const accounts = await provider.send('eth_requestAccounts', []);
 
-      provider.on(proposalEventFilter, (log) => {
-        const data = logParser.parseLog(log);
-        switch (data?.topic) {
-          case '0xd3fa56f4c3009761856942df45fd80d620a3a7d29984823c5e0625403fb2f75d':
-            toast(
-              getInfoToast({
-                title: 'New proposal is created at org',
-                description: 'Title: ' + data?.args?.proposalTitle,
-              })
-            );
-            break;
-        }
-      });
+      provider.removeListener(proposalEventFilter, serverEventHandler);
+      provider.on(proposalEventFilter, serverEventHandler);
 
       set({
         provider,
@@ -87,6 +76,21 @@ export const useMetaMaskStore = create<MetaMaskStateIntf>((set, get) => ({
     });
   },
 }));
+
+const serverEventHandler = (log: any) => {
+  const data = logParser.parseLog(log);
+
+  switch (data?.topic) {
+    case '0xd3fa56f4c3009761856942df45fd80d620a3a7d29984823c5e0625403fb2f75d':
+      toast(
+        getInfoToast({
+          title: 'New proposal is created at org',
+          description: 'Title: ' + data?.args?.message,
+        })
+      );
+      break;
+  }
+};
 
 const handleChainChanged = () => {
   useMetaMaskStore.getState().resetMetaMask();
