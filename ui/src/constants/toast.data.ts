@@ -14,6 +14,15 @@ export const getSuccessToast = ({
   status: 'success',
 });
 
+export const getInfoToast = ({
+  title = 'New Update',
+  description,
+}: TitleDescriptionIntf): UseToastOptions => ({
+  title,
+  description,
+  status: 'info',
+});
+
 export const getFailedToast = ({
   title = 'Transaction failed',
   description,

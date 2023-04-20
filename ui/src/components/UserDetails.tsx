@@ -20,13 +20,15 @@ function UserDetails({ user }: any) {
             <strong>Email: </strong> {user?.email}
           </Text>
         </div>
-        <Image
-          src={user?.pic}
-          alt="display pic"
-          className="border border-black border-solid rounded-full"
-          width={60}
-          height={60}
-        />
+        {user?.pic && (
+          <Image
+            src={user?.pic}
+            alt="display pic"
+            className="border border-black border-solid rounded-full"
+            width={60}
+            height={60}
+          />
+        )}
       </CardBody>
     </Card>
   );

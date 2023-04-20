@@ -31,7 +31,7 @@ export default function UserPage() {
       <Head>
         <title>DAO: User Details</title>
       </Head>
-      <main>
+      <main className="m-auto my-8 px-6 md:max-w-4xl">
         <h2 className="text-2xl font-medium mt-8 text-center">Users of DAO system</h2>
         <UserDetails user={user} />
       </main>

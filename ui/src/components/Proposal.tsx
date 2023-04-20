@@ -99,7 +99,7 @@ function Proposal({ proposal }: any) {
           Document link
         </a>
 
-        {proposal.status === Status.Pending && (
+        {proposal.status === Status.Pending ? (
           <div className="text-center">
             <Text className="mb-4 font-bold">
               {myVote === Status.Pending ? 'Cast your vote' : 'You voted for'}
@@ -123,6 +123,11 @@ function Proposal({ proposal }: any) {
               </Button>
             </div>
           </div>
+        ) : (
+          <span>
+            Proposal got{' '}
+            <strong>{proposal.status === Status.Accept ? 'Accepted' : 'Rejected'}</strong>
+          </span>
         )}
 
         <div>

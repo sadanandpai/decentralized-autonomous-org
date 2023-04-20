@@ -46,7 +46,7 @@ contract Proposal {
     VotingStatus vS;
   }
 
-  event NewProposalCreated(uint indexed proposalId, string message);
+  event NewProposalCreated(uint indexed proposalId, string proposalTitle);
   mapping(uint => VotingDetails[]) public ProposalVotingDetails;
   mapping(uint => address[]) public ProposalUserAddresses;
 
@@ -73,9 +73,9 @@ contract Proposal {
     proposal.status = ProposalStatus.Active;
     proposal.id = proposalId++;
     proposal.endTime = (block.timestamp + PROPOSAL_TIME) * 1000;
-
     proposals.push(proposal);
-    emit NewProposalCreated(proposalId - 1, 'New Proposal Created');
+
+    emit NewProposalCreated(proposalId - 1, proposal.title);
     return proposalId - 1;
   }
 

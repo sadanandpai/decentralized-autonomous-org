@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+import Link from 'next/link';
 import { getFailedToast } from '@/constants/toast.data';
 import { getVotersList } from '@/actions/proposal.action';
 import { useRouter } from 'next/router';
@@ -45,7 +46,11 @@ function Voters() {
           {voters.map((voter: any, idx: number) => (
             <tr key={voter.user}>
               <td>{idx + 1}</td>
-              <td className="break-all">{voter.user}</td>
+              <td className="break-all">
+                <Link href={`/users/${voter.user}`} className="text-blue-700 underline">
+                  {voter.user}
+                </Link>
+              </td>
               <td>{voter.vS === 1 ? 'Accepted' : 'Rejected'}</td>
             </tr>
           ))}

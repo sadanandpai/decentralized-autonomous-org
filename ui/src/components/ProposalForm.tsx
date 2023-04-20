@@ -53,7 +53,7 @@ function ProposalForm({ setIsNewProposal }: any) {
           {isLoading ? <Spinner /> : 'Create Proposal'}
         </Button>
         <Text className="text-center text-sm -mt-6">
-          Proposal creation fee is <strong>0.1 ETH</strong>0.
+          Proposal creation fee is <strong>0.1 ETH</strong>.
           <br />
           This will be refunded if proposal gets approved.
         </Text>
