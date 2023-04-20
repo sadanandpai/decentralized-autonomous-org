@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
+/**
+ * @title DAO User Registry
+ * @dev A smart contract that implements a DAO user registry.
+ */
 contract DaoUser {
   struct User {
     address userAddress;
@@ -10,6 +14,14 @@ contract DaoUser {
     string pic;
   }
 
+  /**
+   * @dev Emitted when a new user is added to the registry.
+   * @param userAddress The Ethereum address of the new user.
+   * @param firstName The first name of the new user.
+   * @param lastName The last name of the new user.
+   * @param email The email of the new user.
+   * @param pic The profile picture of the new user.
+   */
   event NewUserAdded(
     address indexed userAddress,
     string firstName,
@@ -22,6 +34,13 @@ contract DaoUser {
   address[] private userAddressList;
   uint256 public userCount;
 
+  /**
+   * @dev Adds the details of a new user to the registry.
+   * @param firstName The first name of the new user.
+   * @param lastName The last name of the new user.
+   * @param email The email of the new user.
+   * @param pic The profile picture of the new user.
+   */
   function addUserDetails(
     string calldata firstName,
     string calldata lastName,
@@ -53,6 +72,13 @@ contract DaoUser {
     emit NewUserAdded(msg.sender, firstName, lastName, email, pic);
   }
 
+  /**
+   * @dev Updates the details of an existing user in the registry.
+   * @param firstName The new first name of the user.
+   * @param lastName The new last name of the user.
+   * @param email The new email of the user.
+   * @param pic The new profile picture of the user.
+   */
   function updateUserDetails(
     string calldata firstName,
     string calldata lastName,
@@ -65,16 +91,20 @@ contract DaoUser {
     user.email = email;
     user.pic = pic;
   }
-
+  /**
+   * @dev Returns an array of all registered users.
+   * @return An array of User struct representing all registered users.
+   */  
   function getAllUsers() public view returns (User[] memory) {
+    // Initialize an array of users with the size of userCount
     User[] memory users = new User[](userCount);
-
+    // Loop through each user in the userAddressList and retrieve the user details from userDetails mapping
     for (uint256 i = 0; i < userCount; i++) {
       address userAddress = userAddressList[i];
       User storage user = userDetails[userAddress];
       users[i] = user;
     }
-
+    // Return the array of users
     return users;
   }
 
