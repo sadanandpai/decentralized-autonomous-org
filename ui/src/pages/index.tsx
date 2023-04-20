@@ -43,6 +43,11 @@ export default function HomePage() {
               threshold majority.
             </p>
           </div>
+
+          <p className="mb-8 text-center text-orange-700">
+            Metamask web extension and a valid account is manadatory to login to the DAO
+          </p>
+
           <section>
             <h3>
               Built by <strong>Munish Garg, Anand Kumar, and Sadanand Pai</strong>

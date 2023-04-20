@@ -48,7 +48,7 @@ export const useMetaMaskStore = create<MetaMaskStateIntf>((set, get) => ({
             toast(
               getInfoToast({
                 title: 'New proposal is created at org',
-                description: data?.args?.proposalTitle,
+                description: 'Title: ' + data?.args?.proposalTitle,
               })
             );
             break;
