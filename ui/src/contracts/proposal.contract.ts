@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import { useMetaMaskStore } from '@/stores/metaMask.store';
 
-const contractAddress = '0xb49385C77F16dc7463999172c428bE3d58C9013A';
+const contractAddress = '0x187F362e55747800a8f275b17873A2CF2FE3a5E0';
 const abi = [
   {
     inputs: [
@@ -343,6 +343,12 @@ const abi = [
     type: 'function',
   },
 ];
+
+export const proposalEventFilter = {
+  address: contractAddress,
+  topics: ['0xd3fa56f4c3009761856942df45fd80d620a3a7d29984823c5e0625403fb2f75d'],
+};
+export const logParser = new ethers.utils.Interface(abi);
 
 export const getProposalContract = () => {
   const signer = useMetaMaskStore.getState().provider?.getSigner();
